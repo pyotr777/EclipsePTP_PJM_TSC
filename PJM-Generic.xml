@@ -238,58 +238,6 @@
 		</launch-tab>
 	</control-data>	
 	<monitor-data schedulerType="PJM">
-	
-		<rm:layout xmlns:rm="http://eclipse.org/ptp/rm" xmlns="">
-			<nodedisplay title="default" id="org.eclipse.ptp.rm.lml.ui.SystemMonitorView">
-		        <scheme>
-		            <el1 min="0" max="6" tagname="chassi" mask="0xFF0100%01d">
-		                <el2 min="0" max="16" tagname="node" mask="%01x">
-		                	<el3 tagname="core" min="0" max="15" mask="-c%02d"></el3>
-		                </el2>
-		            </el1>
-		        </scheme>
-		        
-		    </nodedisplay>
 		
-		    <nodedisplaylayout id="nodedisplay" gid="org.eclipse.ptp.rm.lml.ui.SystemMonitorView" active="true">
-		        <schemehint>
-		        <el1 min="0" max="6" tagname="chassi" mask="0xFF0100%01d">
-		            <el2 min="0" max="16" tagname="node" mask="%01x">
-		            	<el3 tagname="core" min="0" max="15" mask="-c%02d"></el3>
-		            </el2>
-		        </el1>
-		            </schemehint>
-		        <el0 rows="7" cols="1" maxlevel="2" vgap="5" showtitle="true">
-		            <el1 min="0" max="6" cols="1" showtitle="true"></el1>
-		        </el0>
-		    </nodedisplaylayout>
-		    <tablelayout id="tl_Run" gid="org.eclipse.ptp.rm.lml.ui.ActiveJobsView" active="true" contenthint="jobs">
-		        <column cid="1" pos="1" width="0.1" active="true" key="status" />
-		        <column cid="2" pos="2" width="0.1" active="true" key="jid" />
-		        <column cid="3" pos="3" width="0.1" active="true" key="nodes" />
-		        <column cid="4" pos="4" width="0.4" active="true" key="vnodelist" />
-		        <column cid="5" pos="5" width="0.2" active="true" key="start time" />
-		        <column cid="6" pos="6" width="0.2" active="true" key="time limit" />	        
-		        
-		    </tablelayout>
-		
-		    <table title="Nodes" id="nodelist" contenttype="nodes" description="This is the table contain all nodes of the system">
-		        <column id="1" name="id" sort="alpha" type="mandatory"></column>
-		        <column id="2" name="ncores"></column>
-		        <column id="3" name="physmem" sort="alpha" />
-		        <column id="4" name="state" sort="alpha" />
-		    </table>
-		
-		    <tablelayout id="nodes" gid="nodelist" active="false">
-		        <column cid="1" pos="1" width="1" active="true" key="id" />
-		        <column cid="2" pos="2" width="1" active="true" key="ncores" />
-		        <column cid="3" pos="3" width="1" active="true" key="physmem" />
-		        <column cid="4" pos="4" width="1" active="true" key="state" />
-		    </tablelayout>
-		
-		
-		</rm:layout>
-	
-	
 	</monitor-data>
 </resource-manager-builder>
