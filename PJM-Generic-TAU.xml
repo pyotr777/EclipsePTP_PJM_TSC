@@ -4,7 +4,7 @@
 	xmlns="http://eclipse.org/ptp/rm" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://eclipse.org/ptp/rm http://eclipse.org/ptp/schemas/v1.1/rm.xsd" 
-	name="PJM-Generic">
+	name="PJM-Generic-TAU">
 	<control-data>
 		<!-- Set the default value of this attribute if PJM is installed in a non-standard location -->
 		<attribute name="bindir" visible="false"/>
@@ -98,45 +98,7 @@
 		<submit-batch name="submit-batch" directory="${ptp_rm:directory#value}" waitForId="true">
 			<arg>pjsub</arg>
 			<arg>${ptp_rm:managed_file_for_script#value}</arg>
-			
-			<stdout-parser delim="\n">
-				<target ref="@jobId">
-					<match>
-						<expression>\[(.+)\] PJM \d+ [^\d]+([\d]+) ([\w]+).*</expression>
-						<append field="name">
-							<entry valueGroup="2"/>
-						</append>
-						<set field="default">
-							<entry valueGroup="2"/>
-						</set>
-						<set field="value">
-							<entry value="SUBMITTED"/>
-						</set>
-					</match>
-					
-				</target>
-				<target ref="@jobId">
-					<match>
-						<expression flags="DOTALL|UNIX_LINES">\[ERR.*</expression>
-						<set field="value">
-							<entry value="FAILED"/>
-						</set>
-					</match>
-				</target>
-			</stdout-parser>
-			<stderr-parser delim="\n">
-				<target ref="@jobId">
-					<match>
-						<expression>\[ERR.*</expression>
-						<throw message="Job Submit Failed"/>
-					</match>
-				</target>
-			</stderr-parser>
 		</submit-batch>
-		<terminate-job name="cancel" ignoreExitStatus="true">
-			<arg>${ptp_rm:bindir#value}pjdel</arg>
-			<arg>${ptp_rm:@jobId#name}</arg>
-		</terminate-job>
 		
 		<launch-tab>
 			<dynamic>
@@ -276,37 +238,6 @@
 		</launch-tab>
 	</control-data>	
 	<monitor-data schedulerType="PJM">
-		<rm:layout version="1.0" xmlns="" xmlns:rm="http://eclipse.org/ptp/rm">
-			<nodedisplaylayout id="nodedisplay" gid="org.eclipse.ptp.rm.lml.ui.SystemMonitorView" active="true">
-		        <schemehint>
-		            <el1 min="0" max="7" tagname="tofu_unit" mask="0xFF0100%01d">
-		                <el2 min="0" max="2" tagname="board" mask="%01d">
-		                    <el3 min="0" max="3" tagname="node" mask="%01d">
-		                        <el4 tagname="core" min="0" max="15" mask="-c%02d"></el4>
-		                    </el3>
-		                </el2>
-		            </el1>
-		        </schemehint>
-		        <el0 cols="1" maxlevel="4" vgap="3" showtitle="true">
-		            <el1 min="0" max="7" cols="3" showtitle="false" vgap="1">
-		                <el2 min="0" max="2" cols="4" showtitle="false" hgap="3">
-		                    <el3 min="0" max="3" cols="1" showtitle="false" >
-		                        <el4 min="0" max="15" showtitle="false" ></el4>
-		                    </el3>
-		                </el2>
-		            </el1>
-		        </el0>
-		    </nodedisplaylayout>
 		
-		    <tablelayout id="tl_Run" gid="org.eclipse.ptp.rm.lml.ui.ActiveJobsView" active="true" contenthint="jobs">
-		        <column cid="1" pos="1" width="0.1" active="true" key="state" />
-		        <column cid="2" pos="2" width="0.1" active="true" key="step" />
-		        <column cid="3" pos="3" width="0.1" active="true" key="totalcores" />
-		        <column cid="4" pos="4" width="0.4" active="true" key="vnodelist" />
-		        <column cid="5" pos="5" width="0.2" active="true" key="queuedate" />
-		        <column cid="6" pos="6" width="0.2" active="true" key="wall" />
-		        <column cid="7" pos="7" width="0.5" active="true" key="comment" />
-		    </tablelayout>
-		</rm:layout>	
 	</monitor-data>
 </resource-manager-builder>
