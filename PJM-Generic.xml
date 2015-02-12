@@ -102,7 +102,7 @@
 			<stdout-parser delim="\n">
 				<target ref="@jobId">
 					<match>
-						<expression>\[(.+)\] PJM \d+ [^\d]+([\d]+) ([\w]+).*</expression>
+						<expression>\[(.+)\]\s*PJM\s*\d+\s*[^\d]+([\d]+)\s*([\w]+).*</expression>
 						<append field="name">
 							<entry valueGroup="2"/>
 						</append>
@@ -123,6 +123,14 @@
 						</set>
 					</match>
 				</target>
+				<target ref="@jobId">
+					<match>
+						<expression flags="DOTALL|UNIX_LINES">(.+)</expression>
+						<set field="value">
+							<entry value="SUBMITTED"/>
+						</set>
+					</match>
+				</target>
 			</stdout-parser>
 			<stderr-parser delim="\n">
 				<target ref="@jobId">
@@ -133,6 +141,87 @@
 				</target>
 			</stderr-parser>
 		</submit-batch>
+		
+		<get-job-status name="get-job-status" ignoreExitStatus="true">
+			<arg>pjstat</arg>			
+			<stdout-parser delim="\n">
+				<target ref="@jobId">
+					<match>
+						<expression>^[0-9]+\s+[A-Za-z0-9\-]+\s+\w+\s+(\w+)\s+\w+\s+.+</expression>
+						<set field="value">
+							<entry valueGroup="1"/>
+						</set>
+					</match>
+					<test op="EQ">
+						<value>#value</value>
+						<value>QUE</value>
+						<set field="value">
+							<entry value="QUEUED_ACTIVE"/>
+						</set>
+					</test>
+					<test op="EQ">
+						<value>#value</value>
+						<value>RUN</value>
+						<set field="value">
+							<entry value="RUNNING"/>
+						</set>
+					</test>
+					<test op="EQ">
+						<value>#value</value>
+						<value>ERR</value>
+						<set field="value">
+							<entry value="SUSPENDED"/>
+						</set>
+					</test>
+					<test op="EQ">
+						<value>#value</value>
+						<value>RNO</value>
+						<set field="value">
+							<entry value="COMPLETED"/>
+						</set>
+					</test>
+					<test op="EQ">
+						<value>#value</value>
+						<value>SOT</value>
+						<set field="value">
+							<entry value="COMPLETED"/>
+						</set>
+					</test>
+					<test op="EQ">
+						<value>#value</value>
+						<value>EXT</value>
+						<set field="value">
+							<entry value="COMPLETED"/>
+						</set>
+					</test>
+					<test op="EQ">
+						<value>#value</value>
+						<value>CCL</value>
+						<set field="value">
+							<entry value="COMPLETED"/>
+						</set>
+					</test>
+					<test op="EQ">
+						<value>#value</value>
+						<value>HLD</value>
+						<set field="value">
+							<entry value="SYSTEM_ON_HOLD"/>
+						</set>
+					</test>
+				</target>
+			</stdout-parser>
+			<stderr-parser delim="\n">
+				<target ref="@jobId">
+					<match>
+						<expression flags="DOTALL">.+</expression>
+						<set field="value">
+							<entry value="COMPLETED"/>
+						</set>
+					</match>
+				</target>
+			</stderr-parser>
+		</get-job-status>
+		
 		<terminate-job name="cancel" ignoreExitStatus="true">
 			<arg>${ptp_rm:bindir#value}pjdel</arg>
 			<arg>${ptp_rm:@jobId#name}</arg>
@@ -245,9 +334,7 @@
 							<grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
 						</layout-data>
 						<fixed-text>${ptp_rm:mpiCommand#description}</fixed-text>
-					</widget>
-					
-					
+					</widget>				
 				</composite>	
 				<!-- Group -->
 				<composite group="true">
@@ -299,8 +386,8 @@
 		    </nodedisplaylayout>
 		
 		    <tablelayout id="tl_Run" gid="org.eclipse.ptp.rm.lml.ui.ActiveJobsView" active="true" contenthint="jobs">
-		        <column cid="1" pos="1" width="0.1" active="true" key="state" />
-		        <column cid="2" pos="2" width="0.1" active="true" key="step" />
+		        <column cid="1" pos="1" width="0.1" active="true" key="step" />
+		        <column cid="2" pos="2" width="0.1" active="true" key="state" />
 		        <column cid="3" pos="3" width="0.1" active="true" key="totalcores" />
 		        <column cid="4" pos="4" width="0.4" active="true" key="vnodelist" />
 		        <column cid="5" pos="5" width="0.2" active="true" key="queuedate" />
