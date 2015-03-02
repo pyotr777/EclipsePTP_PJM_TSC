@@ -1,243 +1,384 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <resource-manager-builder 
-	xmlns="http://eclipse.org/ptp/rm" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://eclipse.org/ptp/rm http://eclipse.org/ptp/schemas/v1.1/rm.xsd" 
-	name="PJM-Generic-TAU">
-	<control-data>
-		<!-- Set the default value of this attribute if PJM is installed in a non-standard location -->
-		<attribute name="bindir" visible="false"/>
-		<!-- This is a necessary attribute for the functioning of LML; link it to the batch-specific variable name -->
-		<attribute name="control.queue.name" visible="false">
-			<link-value-to>destination</link-value-to>
-		</attribute>
-		<attribute name="queues" visible="false"/>
-		<attribute name="destination" type="string">
-			<description>Designation of the queue to which to submit the job.</description>
-			<tooltip>Format: queue[@server].</tooltip>
-		</attribute>
-		
-		<attribute name="mpiCommand" type="choice">
-			<description>Which mpi command to use.</description>
-			<choice>,mpiexec,mpirun</choice>
-		</attribute>		
-		
-		<attribute name="nodes" type="string">
-			<description>The number of nodes and node shape allocated to job</description>
-			<tooltip>node=N node=N1xN2 node=N1xN2xN3</tooltip>
-			<default>1</default>
-		</attribute>
-		<attribute name="elapse" type="string">
-			<description>Maximum executable time for a job</description>
-			<tooltip>Format: [[hours:]minutes:]seconds[.milliseconds].</tooltip>
-			<default>00:01:00</default>
-			<validator>
-				<regex expression="\d\d:\d\d:\d\d"/>
-				<error-message>format must be hh:mm:ss</error-message>
-			</validator>
-		</attribute>		
-		<attribute name="executable" type="string">
-			<description>Executable file</description>
-		</attribute>
-		<script>
-			<file-staging-location>${ptp_rm:directory#value}</file-staging-location>
-			<line>
-				<arg>#! /bin/bash -x</arg>
-			</line>
-			<line>
-				<arg>#PJM --rsc-list "rscgrp=${ptp_rm:destination#value}"</arg>
-			</line>
-			<line>
-				<arg>#PJM --rsc-list "node=${ptp_rm:nodes#value}"</arg>
-			</line>
-			<line>
-				<arg>#PJM --rsc-list "elapse=${ptp_rm:elapse#value}"</arg>
-			</line>
-			<line>
-				<arg>#PJM --stg-transfiles "all"</arg>
-			</line>
-			<line>
-				<arg>#PJM --mpi "use-rankdir"</arg>
-			</line>
-			<line>
-				<arg>#PJM --stgin "rank=*</arg>
-				<arg>${ptp_rm:executable#value}</arg>
-				<arg>%r:./"</arg>
-			</line>
-			<line>
-				<arg>#PJM -s</arg>
-			</line>			
-			<line>
-				<arg></arg>
-			</line>
-			<line>
-				<arg>. /work/system/Env_base</arg>
-			</line>
-			<line>
-				<arg>mpiexec ${ptp_rm:executable#value}</arg>
-			</line>			
-		</script>
-			
-		<start-up-command name="get-queues">
-			<arg>${ptp_rm:bindir#value}pjstat</arg>
-			<arg>--rsc</arg>
-			<stdout-parser delim="\n">
-				<target ref="queues">
-					<match>
-						<expression>([\d\w\[\],]+)\s*([\d\w\[\],]+)\s*(\w+)(\[\w+,\w+\])\s*([\d\w\[\],]+)\s*</expression>
-						<add field="value">
-							<entry valueGroup="3"/>				
-						</add>
-					</match>
-				</target>
-			</stdout-parser>
-		</start-up-command>
-		
-		
-		<submit-batch name="submit-batch" directory="${ptp_rm:directory#value}" waitForId="true">
-			<arg>pjsub</arg>
-			<arg>${ptp_rm:managed_file_for_script#value}</arg>
-		</submit-batch>
-		
-		<launch-tab>
-			<dynamic>
-				<title>Basic Settings</title>
-				<layout>
-					<grid-layout/>
-				</layout>
-				<!-- QUEUES remote path group -->
-				<composite group="true">
-					<layout>
-						<grid-layout numColumns="3" makeColumnsEqualWidth="false"/>
-					</layout>
-					<widget type="label" style="SWT.LEFT">
-						<layout-data>
-							<grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER"/>
-						</layout-data>
-						<tooltip>${ptp_rm:destination#tooltip}</tooltip>
-						<fixed-text>Queue: </fixed-text>
-					</widget>
-					<widget type="combo" style="SWT.BORDER" readOnly="true" attribute="destination">
-						<layout-data>
-							<grid-data widthHint="150" horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" horizontalSpan="2"/>
-						</layout-data>
-						<items-from>queues</items-from>
-					</widget>
-				</composite>
-				
-				
-				
-				<!-- ATTRIBUTES group -->
-				<composite group="true">
-					<layout>
-						<grid-layout numColumns="4" makeColumnsEqualWidth="false" horizontalSpacing="10" verticalSpacing="15"/>
-					</layout>
-					<!-- HEADER -->
-					<widget type="label" style="SWT.LEFT">
-						<layout-data>
-							<grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
-						</layout-data>
-						<fixed-text>Name</fixed-text>
-					</widget>
-					<widget type="label" style="SWT.LEFT">
-						<layout-data>
-							<grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" horizontalSpan="2" grabExcessHorizontal="false"/>
-						</layout-data>
-						<fixed-text>Value</fixed-text>
-					</widget>
-					<widget type="label" style="SWT.LEFT">
-						<layout-data>
-							<grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
-						</layout-data>
-						<fixed-text>Description</fixed-text>
-					</widget>
-					<!-- row 1 -->
-	               	<widget type="label" style="SWT.LEFT">
-						<layout-data>
-							<grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
-						</layout-data>
-						<tooltip>${ptp_rm:nodes#tooltip}</tooltip>
-						<fixed-text>Nodes: </fixed-text>
-					</widget>
-					<widget type="text" style="SWT.BORDER" attribute="nodes">
-						<layout-data>
-							<grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" horizontalSpan="2" grabExcessHorizontal="false" widthHint="150"/>
-						</layout-data>
-					</widget>
-					<widget type="label" style="SWT.LEFT">
-						<layout-data>
-							<grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
-						</layout-data>
-						<fixed-text>${ptp_rm:nodes#description}</fixed-text>
-					</widget>
-					<!-- row 2 -->
-					<widget type="label" style="SWT.LEFT">
-						<layout-data>
-							<grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
-						</layout-data>
-						<tooltip>${ptp_rm:elapse#tooltip}</tooltip>
-						<fixed-text>Wallclock Time: </fixed-text>
-					</widget>
-					<widget type="text" style="SWT.BORDER" attribute="elapse">
-						<layout-data>
-							<grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" horizontalSpan="2" grabExcessHorizontal="false" widthHint="150"/>
-						</layout-data>
-					</widget>
-					<widget type="label" style="SWT.LEFT">
-						<layout-data>
-							<grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
-						</layout-data>
-						<fixed-text>${ptp_rm:elapse#description}</fixed-text>
-					</widget>
-					<!-- row 4 -->
-					<widget type="label" style="SWT.LEFT">
-						<layout-data>
-							<grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
-						</layout-data>
-						<fixed-text>MPI Command: </fixed-text>
-					</widget>
-					<widget type="combo" style="SWT.BORDER" readOnly="true" attribute="mpiCommand">
-						<layout-data>
-							<grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" horizontalSpan="2" grabExcessHorizontal="false"/>
-						</layout-data>
-					</widget>
-					<widget type="label" style="SWT.LEFT">
-						<layout-data>
-							<grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
-						</layout-data>
-						<fixed-text>${ptp_rm:mpiCommand#description}</fixed-text>
-					</widget>
-					
-					
-				</composite>	
-				<!-- Group -->
-				<composite group="true">
-					<layout>
-						<grid-layout numColumns="3" makeColumnsEqualWidth="false"  horizontalSpacing="10" verticalSpacing="15"/>
-					</layout>
-					<layout-data>
-						<grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER"  grabExcessHorizontal="true" grabExcessVertical="false"/>
-					</layout-data>
-					<widget type="label" style="SWT.LEFT">
-						<layout-data>
-							<grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
-						</layout-data>
-						<fixed-text>Executable:</fixed-text>						
-					</widget>				
-					<browse textStyle="SWT.BORDER" title="Browse" attribute="executable">
-						<text-layout-data>
-							<grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" widthHint="200" grabExcessHorizontal="true" />							
-						</text-layout-data>
-						<button-layout-data>
-							<grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" widthHint="100" grabExcessHorizontal="false"/>
-						</button-layout-data>
-					</browse>
-				</composite>
-			</dynamic>
-		</launch-tab>
-	</control-data>	
-	<monitor-data schedulerType="PJM">
-		
-	</monitor-data>
+    xmlns="http://eclipse.org/ptp/rm" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://eclipse.org/ptp/rm http://eclipse.org/ptp/schemas/v1.1/rm.xsd" 
+    name="PJM-Generic-TAU">
+    <control-data>
+        <!-- Set the default value of this attribute if PJM is installed in a non-standard location -->
+        <attribute name="bindir" visible="false"/>
+        <!-- This is a necessary attribute for the functioning of LML; link it to the batch-specific variable name -->
+        <attribute name="control.queue.name" visible="false">
+            <link-value-to>destination</link-value-to>
+        </attribute>
+        <attribute name="queues" visible="false"/>
+        <attribute name="destination" type="string">
+            <description>Designation of the queue to which to submit the job.</description>
+            <tooltip>Format: queue[@server].</tooltip>
+        </attribute>
+        
+        <attribute name="mpiCommand" type="choice">
+            <description>Which mpi command to use.</description>
+            <choice>,mpiexec,mpirun</choice>
+        </attribute>        
+        
+        <attribute name="nodes" type="string">
+            <description>The number of nodes and node shape allocated to job</description>
+            <tooltip>node=N node=N1xN2 node=N1xN2xN3</tooltip>
+            <default>1</default>
+        </attribute>
+        <attribute name="elapse" type="string">
+            <description>Maximum executable time for a job</description>
+            <tooltip>Format: [[hours:]minutes:]seconds[.milliseconds].</tooltip>
+            <default>00:01:00</default>
+            <validator>
+                <regex expression="\d\d:\d\d:\d\d"/>
+                <error-message>format must be hh:mm:ss</error-message>
+            </validator>
+        </attribute>        
+        <attribute name="executable" type="string">
+            <description>Executable file</description>
+        </attribute>
+        <script>
+            <file-staging-location>${ptp_rm:directory#value}</file-staging-location>
+            <line>
+                <arg>#! /bin/bash -x</arg>
+            </line>
+            <line>
+                <arg>#PJM --rsc-list "rscgrp=${ptp_rm:destination#value}"</arg>
+            </line>
+            <line>
+                <arg>#PJM --rsc-list "node=${ptp_rm:nodes#value}"</arg>
+            </line>
+            <line>
+                <arg>#PJM --rsc-list "elapse=${ptp_rm:elapse#value}"</arg>
+            </line>
+            <line>
+                <arg>#PJM --stg-transfiles "all"</arg>
+            </line>
+            <line>
+                <arg>#PJM --mpi "use-rankdir"</arg>
+            </line>
+            <line>
+                <arg>#PJM --stgin "rank=*</arg>
+                <arg>${ptp_rm:executable#value}</arg>
+                <arg>%r:./"</arg>
+            </line>
+            <line>
+                <arg>#PJM --stgin "rank=* ../tau.bashrc %r:./"</arg>
+            </line>
+            <line>
+                <arg>#PJM --stgout "rank=* ./profile.* ./"</arg>
+            </line>
+            <line>
+                <arg>#PJM -s</arg>
+            </line>         
+            <line>
+                <arg>#</arg>
+            </line>
+            <line>
+                <arg>. /work/system/Env_base</arg>
+            </line>
+            <line>
+                <arg>. ./tau.bashrc</arg>
+            </line>
+            <line>
+                <arg>mpiexec ${ptp_rm:executable#value}</arg>
+            </line>         
+        </script>
+            
+        <start-up-command name="get-queues">
+            <arg>${ptp_rm:bindir#value}pjstat</arg>
+            <arg>--rsc</arg>
+            <stdout-parser delim="\n">
+                <target ref="queues">
+                    <match>
+                        <expression>([\d\w\[\],]+)\s*([\d\w\[\],]+)\s*(\w+)(\[\w+,\w+\])\s*([\d\w\[\],]+)\s*</expression>
+                        <add field="value">
+                            <entry valueGroup="3"/>             
+                        </add>
+                    </match>
+                </target>
+            </stdout-parser>
+        </start-up-command>
+        
+        
+        <submit-batch name="submit-batch" directory="${ptp_rm:directory#value}" waitForId="true" redirectStderr="true">
+            <arg>pjsub</arg>
+            <arg>${ptp_rm:managed_file_for_script#value}</arg>
+            
+            <stdout-parser delim="\n">
+                <target ref="@jobId">
+                    <match>
+                        <expression>\[(.+)\]\s*PJM\s*\d+\s*[^\d]+([\d]+)\s*([\w]+).*</expression>
+                        <append field="name">
+                            <entry valueGroup="2"/>
+                        </append>
+                        <set field="default">
+                            <entry valueGroup="2"/>
+                        </set>
+                        <set field="value">
+                            <entry value="SUBMITTED"/>
+                        </set>
+                    </match>                    
+                </target>
+                <target ref="@jobId">
+                    <match>
+                        <expression flags="DOTALL|UNIX_LINES">\[ERR.*</expression>
+                        <set field="value">
+                            <entry value="FAILED"/>
+                        </set>
+                    </match>
+                </target>
+                <target ref="@jobId">
+                    <match>
+                        <expression flags="DOTALL|UNIX_LINES">(.+)</expression>
+                        <set field="value">
+                            <entry value="SUBMITTED"/>
+                        </set>
+                    </match>
+                </target>
+            </stdout-parser>
+            <stderr-parser delim="\n">
+                <target ref="@jobId">
+                    <match>
+                        <expression>\[ERR.*</expression>
+                        <throw message="Job Submit Failed"/>
+                    </match>
+                </target>
+            </stderr-parser>
+        </submit-batch>        
+        <get-job-status name="get-job-status" ignoreExitStatus="true">
+            <arg>pjstat</arg>           
+            <stdout-parser delim="\n">
+                <target ref="@jobId">
+                    <match>
+                        <expression>^[0-9]+\s+[A-Za-z0-9\-]+\s+\w+\s+(\w+)\s+\w+\s+.+</expression>
+                        <set field="value">
+                            <entry valueGroup="1"/>
+                        </set>
+                    </match>
+                    <test op="EQ">
+                        <value>#value</value>
+                        <value>QUE</value>
+                        <set field="value">
+                            <entry value="QUEUED_ACTIVE"/>
+                        </set>
+                    </test>
+                    <test op="EQ">
+						<value>#value</value>
+						<value>RDY</value>
+						<set field="value">
+							<entry value="READY"/>
+						</set>
+					</test>
+                    <test op="EQ">
+                        <value>#value</value>
+                        <value>RUN</value>
+                        <set field="value">
+                            <entry value="RUNNING"/>
+                        </set>
+                    </test>
+                    <test op="EQ">
+                        <value>#value</value>
+                        <value>ERR</value>
+                        <set field="value">
+                            <entry value="SUSPENDED"/>
+                        </set>
+                    </test>
+                    <test op="EQ">
+                        <value>#value</value>
+                        <value>RNO</value>
+                        <set field="value">
+                            <entry value="RUNNING"/>
+                        </set>
+                    </test>
+                    <test op="EQ">
+                        <value>#value</value>
+                        <value>SOT</value>
+                        <set field="value">
+                            <entry value="RUNNING"/>
+                        </set>
+                    </test>
+                    <test op="EQ">
+                        <value>#value</value>
+                        <value>EXT</value>
+                        <set field="value">
+                            <entry value="COMPLETED"/>
+                        </set>
+                    </test>
+                    <test op="EQ">
+                        <value>#value</value>
+                        <value>CCL</value>
+                        <set field="value">
+                            <entry value="COMPLETED"/>
+                        </set>
+                    </test>
+                    <test op="EQ">
+                        <value>#value</value>
+                        <value>HLD</value>
+                        <set field="value">
+                            <entry value="SYSTEM_ON_HOLD"/>
+                        </set>
+                    </test>
+                </target>
+            </stdout-parser>
+            <stderr-parser delim="\n">
+                <target ref="@jobId">
+                    <match>
+                        <expression flags="DOTALL">.+</expression>
+                        <set field="value">
+                            <entry value="COMPLETED"/>
+                        </set>
+                    </match>
+                </target>
+            </stderr-parser>
+        </get-job-status>
+        
+        <terminate-job name="cancel" ignoreExitStatus="true">
+            <arg>${ptp_rm:bindir#value}pjdel</arg>
+            <arg>${ptp_rm:@jobId#name}</arg>
+        </terminate-job>
+        
+        <launch-tab>
+            <dynamic>
+                <title>Basic Settings</title>
+                <layout>
+                    <grid-layout/>
+                </layout>
+                <!-- QUEUES remote path group -->
+                <composite group="true">
+                    <layout>
+                        <grid-layout numColumns="3" makeColumnsEqualWidth="false"/>
+                    </layout>
+                    <widget type="label" style="SWT.LEFT">
+                        <layout-data>
+                            <grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER"/>
+                        </layout-data>
+                        <tooltip>${ptp_rm:destination#tooltip}</tooltip>
+                        <fixed-text>Queue: </fixed-text>
+                    </widget>
+                    <widget type="combo" style="SWT.BORDER" readOnly="true" attribute="destination">
+                        <layout-data>
+                            <grid-data widthHint="150" horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" horizontalSpan="2"/>
+                        </layout-data>
+                        <items-from>queues</items-from>
+                    </widget>
+                </composite>
+                
+                
+                
+                <!-- ATTRIBUTES group -->
+                <composite group="true">
+                    <layout>
+                        <grid-layout numColumns="4" makeColumnsEqualWidth="false" horizontalSpacing="10" verticalSpacing="15"/>
+                    </layout>
+                    <!-- HEADER -->
+                    <widget type="label" style="SWT.LEFT">
+                        <layout-data>
+                            <grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
+                        </layout-data>
+                        <fixed-text>Name</fixed-text>
+                    </widget>
+                    <widget type="label" style="SWT.LEFT">
+                        <layout-data>
+                            <grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" horizontalSpan="2" grabExcessHorizontal="false"/>
+                        </layout-data>
+                        <fixed-text>Value</fixed-text>
+                    </widget>
+                    <widget type="label" style="SWT.LEFT">
+                        <layout-data>
+                            <grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
+                        </layout-data>
+                        <fixed-text>Description</fixed-text>
+                    </widget>
+                    <!-- row 1 -->
+                    <widget type="label" style="SWT.LEFT">
+                        <layout-data>
+                            <grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
+                        </layout-data>
+                        <tooltip>${ptp_rm:nodes#tooltip}</tooltip>
+                        <fixed-text>Nodes: </fixed-text>
+                    </widget>
+                    <widget type="text" style="SWT.BORDER" attribute="nodes">
+                        <layout-data>
+                            <grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" horizontalSpan="2" grabExcessHorizontal="false" widthHint="150"/>
+                        </layout-data>
+                    </widget>
+                    <widget type="label" style="SWT.LEFT">
+                        <layout-data>
+                            <grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
+                        </layout-data>
+                        <fixed-text>${ptp_rm:nodes#description}</fixed-text>
+                    </widget>
+                    <!-- row 2 -->
+                    <widget type="label" style="SWT.LEFT">
+                        <layout-data>
+                            <grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
+                        </layout-data>
+                        <tooltip>${ptp_rm:elapse#tooltip}</tooltip>
+                        <fixed-text>Wallclock Time: </fixed-text>
+                    </widget>
+                    <widget type="text" style="SWT.BORDER" attribute="elapse">
+                        <layout-data>
+                            <grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" horizontalSpan="2" grabExcessHorizontal="false" widthHint="150"/>
+                        </layout-data>
+                    </widget>
+                    <widget type="label" style="SWT.LEFT">
+                        <layout-data>
+                            <grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
+                        </layout-data>
+                        <fixed-text>${ptp_rm:elapse#description}</fixed-text>
+                    </widget>
+                    <!-- row 4 -->
+                    <widget type="label" style="SWT.LEFT">
+                        <layout-data>
+                            <grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
+                        </layout-data>
+                        <fixed-text>MPI Command: </fixed-text>
+                    </widget>
+                    <widget type="combo" style="SWT.BORDER" readOnly="true" attribute="mpiCommand">
+                        <layout-data>
+                            <grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" horizontalSpan="2" grabExcessHorizontal="false"/>
+                        </layout-data>
+                    </widget>
+                    <widget type="label" style="SWT.LEFT">
+                        <layout-data>
+                            <grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
+                        </layout-data>
+                        <fixed-text>${ptp_rm:mpiCommand#description}</fixed-text>
+                    </widget>
+                    
+                    
+                </composite>    
+                <!-- Group -->
+                <composite group="true">
+                    <layout>
+                        <grid-layout numColumns="3" makeColumnsEqualWidth="false"  horizontalSpacing="10" verticalSpacing="15"/>
+                    </layout>
+                    <layout-data>
+                        <grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER"  grabExcessHorizontal="true" grabExcessVertical="false"/>
+                    </layout-data>
+                    <widget type="label" style="SWT.LEFT">
+                        <layout-data>
+                            <grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
+                        </layout-data>
+                        <fixed-text>Executable:</fixed-text>                        
+                    </widget>               
+                    <browse textStyle="SWT.BORDER" title="Browse" attribute="executable">
+                        <text-layout-data>
+                            <grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" widthHint="200" grabExcessHorizontal="true" />                         
+                        </text-layout-data>
+                        <button-layout-data>
+                            <grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" widthHint="100" grabExcessHorizontal="false"/>
+                        </button-layout-data>
+                    </browse>
+                </composite>
+            </dynamic>
+        </launch-tab>
+    </control-data> 
+    <monitor-data schedulerType="PJM">
+        
+    </monitor-data>
 </resource-manager-builder>
