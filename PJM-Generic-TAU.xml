@@ -40,7 +40,7 @@
         <attribute name="executable" type="string">
             <description>Executable file</description>
         </attribute>
-        <script>
+        <script insertEnvironmentAfter="11">
             <file-staging-location>${ptp_rm:directory#value}</file-staging-location>
             <line>
                 <arg>#! /bin/bash -x</arg>
@@ -69,8 +69,12 @@
                 <arg>#PJM --stgin "rank=* ../tau.bashrc %r:./"</arg>
             </line>
             <line>
+                <arg>#PJM --stgout "rank=* ./*.ppk ./"</arg>
+            </line>
+            <line>
                 <arg>#PJM --stgout "rank=* ./profile.* ./"</arg>
             </line>
+            
             <line>
                 <arg>#PJM -s</arg>
             </line>         
@@ -82,6 +86,9 @@
             </line>
             <line>
                 <arg>. ./tau.bashrc</arg>
+            </line>
+            <line>
+                <arg>env | grep -i "tau"</arg>
             </line>
             <line>
                 <arg>mpiexec ${ptp_rm:executable#value}</arg>
@@ -150,7 +157,8 @@
             </stderr-parser>
         </submit-batch>        
         <get-job-status name="get-job-status" ignoreExitStatus="true">
-            <arg>pjstat</arg>           
+            <arg>pjstat</arg>
+            <arg>${ptp_rm:@jobId#name}</arg>
             <stdout-parser delim="\n">
                 <target ref="@jobId">
                     <match>
@@ -164,6 +172,13 @@
                         <value>QUE</value>
                         <set field="value">
                             <entry value="QUEUED_ACTIVE"/>
+                        </set>
+                    </test>
+                    <test op="EQ">
+                        <value>#value</value>
+                        <value>SIN</value>
+                        <set field="value">
+                            <entry value="STAGING"/>
                         </set>
                     </test>
                     <test op="EQ">
@@ -198,7 +213,7 @@
                         <value>#value</value>
                         <value>SOT</value>
                         <set field="value">
-                            <entry value="RUNNING"/>
+                            <entry value="STAGING_OUT"/>
                         </set>
                     </test>
                     <test op="EQ">

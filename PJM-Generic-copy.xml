@@ -141,7 +141,8 @@
 			</stderr-parser>
 		</submit-batch>
         <get-job-status name="get-job-status" ignoreExitStatus="true">
-			<arg>pjstat</arg>			
+			<arg>pjstat</arg>
+			<arg>${ptp_rm:@jobId#name}</arg>			
 			<stdout-parser delim="\n">
 				<target ref="@jobId">
 					<match>
@@ -182,14 +183,14 @@
 						<value>#value</value>
 						<value>RNO</value>
 						<set field="value">
-							<entry value="COMPLETED"/>
+							<entry value="RUNPUT"/>
 						</set>
 					</test>
 					<test op="EQ">
 						<value>#value</value>
 						<value>SOT</value>
 						<set field="value">
-							<entry value="COMPLETED"/>
+							<entry value="STAGEOUT"/>
 						</set>
 					</test>
 					<test op="EQ">
