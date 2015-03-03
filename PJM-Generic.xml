@@ -40,7 +40,7 @@
 		<attribute name="executable" type="string">
 			<description>Executable file</description>
 		</attribute>
-		<script>
+		<script insertEnvironmentAfter="10">
 			<file-staging-location>${ptp_rm:directory#value}</file-staging-location>
 			<line>
 				<arg>#! /bin/bash -x</arg>
@@ -143,7 +143,8 @@
 		</submit-batch>
 		
 		<get-job-status name="get-job-status" ignoreExitStatus="true">
-			<arg>pjstat</arg>			
+			<arg>pjstat</arg>
+			<arg>${ptp_rm:@jobId#name}</arg>	
 			<stdout-parser delim="\n">
 				<target ref="@jobId">
 					<match>
@@ -157,6 +158,20 @@
 						<value>QUE</value>
 						<set field="value">
 							<entry value="QUEUED_ACTIVE"/>
+						</set>
+					</test>
+					<test op="EQ">
+                        <value>#value</value>
+                        <value>SIN</value>
+                        <set field="value">
+                            <entry value="STAGING"/>
+                        </set>
+                    </test>
+                    <test op="EQ">
+						<value>#value</value>
+						<value>RDY</value>
+						<set field="value">
+							<entry value="READY"/>
 						</set>
 					</test>
 					<test op="EQ">
@@ -184,9 +199,16 @@
 						<value>#value</value>
 						<value>SOT</value>
 						<set field="value">
-							<entry value="COMPLETED"/>
+							<entry value="RUNNING"/>
 						</set>
 					</test>
+					<test op="EQ">
+                        <value>#value</value>
+                        <value>SOT</value>
+                        <set field="value">
+                            <entry value="STAGING_OUT"/>
+                        </set>
+                    </test>
 					<test op="EQ">
 						<value>#value</value>
 						<value>EXT</value>
