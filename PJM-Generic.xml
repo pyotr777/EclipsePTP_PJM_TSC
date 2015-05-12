@@ -20,7 +20,7 @@
 		
 		<attribute name="mpiCommand" type="choice">
 			<description>Which mpi command to use.</description>
-			<choice>,mpiexec,mpirun</choice>
+			<choice>mpiexec,mpirun</choice>
 		</attribute>		
 		
 		<attribute name="nodes" type="string">
@@ -40,7 +40,7 @@
 		<attribute name="executable" type="string">
 			<description>Executable file</description>
 		</attribute>
-		<script insertEnvironmentAfter="10">
+		<script insertEnvironmentAfter="1">
 			<file-staging-location>${ptp_rm:directory#value}</file-staging-location>
 			<line>
 				<arg>#! /bin/bash -x</arg>
