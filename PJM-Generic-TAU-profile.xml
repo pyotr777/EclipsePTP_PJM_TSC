@@ -4,7 +4,7 @@
     xmlns="http://eclipse.org/ptp/rm" 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://eclipse.org/ptp/rm http://eclipse.org/ptp/schemas/v1.1/rm.xsd" 
-    name="PJM-Generic-TAU">
+    name="PJM-Generic-TAU-profile">
     <control-data>
         <!-- Set the default value of this attribute if PJM is installed in a non-standard location -->
         <attribute name="bindir" visible="false"/>
@@ -40,7 +40,7 @@
         <attribute name="executable" type="string">
             <description>Executable file</description>
         </attribute>
-        <script insertEnvironmentAfter="11">
+        <script insertEnvironmentAfter="10">
             <file-staging-location>${ptp_rm:directory#value}</file-staging-location>
             <line>
                 <arg>#! /bin/bash -x</arg>
@@ -65,26 +65,26 @@
                 <arg>${ptp_rm:executable#value}</arg>
                 <arg>%r:./"</arg>
             </line>
-            <line>
+             <line>
                 <arg>#PJM --stgin "rank=* ../tau.bashrc.compnodes %r:./tau.bashrc"</arg>
-            </line>     
+            </line>
             <line>
-                <arg>#PJM -s</arg>
+                <arg>#PJM --stgout "rank=* ./*.* ./"</arg>
             </line>
             <line>
                 <arg>. /work/system/Env_base</arg>
+            </line>
+            <line>
+                <arg>. ./tau.bashrc</arg>
+            </line>
+            <line>
+                <arg>echo $HOSTNAME</arg>
             </line>
             <line>
                 <arg>pwd</arg>
             </line>
             <line>
                 <arg>ls -la</arg>
-            </line>            
-            <line>
-                <arg>echo $HOSTNAME</arg>
-            </line>
-            <line>
-                <arg>. ./tau.bashrc</arg>
             </line>
             <line>
                 <arg>env</arg>
