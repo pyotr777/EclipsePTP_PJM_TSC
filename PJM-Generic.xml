@@ -20,7 +20,7 @@
 		
 		<attribute name="mpiCommand" type="choice">
 			<description>Which mpi command to use.</description>
-			<choice>mpiexec,mpirun</choice>
+			<choice>mpiexec</choice>
 		</attribute>		
 		
 		<attribute name="nodes" type="string">
@@ -69,7 +69,7 @@
 				<arg>#PJM -s</arg>
 			</line>			
 			<line>
-				<arg></arg>
+				<arg>env</arg>
 			</line>
 			<line>
 				<arg>. /work/system/Env_base</arg>

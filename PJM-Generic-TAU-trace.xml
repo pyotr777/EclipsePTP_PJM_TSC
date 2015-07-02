@@ -66,22 +66,19 @@
                 <arg>%r:./"</arg>
             </line>
             <line>
-                <arg>#PJM --stgin "rank=* ./03.tau.bashrc %r:./"</arg>
+                <arg>#PJM --stgin "rank=* ./tau.trace.bashrc %r:./"</arg>
             </line>     
             <line>
             	<arg>#PJM --stgin-dir "rank=* ../tau-2.24.1/sparc64fx %r:./tau-2.24.1/sparc64fx recursive=3"</arg>
             </line>
             <line>
-                <arg>#PJM --stgout "rank=* ./*.trc ./"</arg>
-            </line>
-            <line>
-                <arg>#PJM --stgout "rank=* ./*.edf ./"</arg>
+                <arg>#PJM --stgout "rank=* ./*.* ./"</arg>
             </line>
             <line>
                 <arg>. /work/system/Env_base</arg>
             </line>
             <line>
-                <arg>. ./03.tau.bashrc</arg>
+                <arg>. ./tau.trace.bashrc</arg>
             </line>
             <line>
                 <arg>export PATH="$(pwd)/tau/sparc64fx/bin:$PATH"</arg>
