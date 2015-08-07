@@ -64,10 +64,7 @@
                 <arg>#PJM --stgin "rank=*</arg>
                 <arg>${ptp_rm:executable#value}</arg>
                 <arg>%r:./"</arg>
-            </line>
-             <line>
-                <arg>#PJM --stgin "rank=* ../tau.bashrc.compnodes %r:./tau.bashrc"</arg>
-            </line>
+            </line>             
             <line>
                 <arg>#PJM --stgout "rank=* ./*.* ./"</arg>
             </line>
@@ -75,23 +72,20 @@
                 <arg>. /work/system/Env_base</arg>
             </line>
             <line>
-                <arg>. ./tau.bashrc</arg>
-            </line>
-            <line>
                 <arg>echo $HOSTNAME</arg>
             </line>
             <line>
                 <arg>pwd</arg>
-            </line>
+            </line>            
             <line>
-                <arg>ls -la</arg>
-            </line>
-            <line>
-                <arg>env</arg>
+                <arg>env | grep -i tau</arg>
             </line>
             <line>
                 <arg>mpiexec ${ptp_rm:executable#value}</arg>
-            </line>         
+            </line>  
+            <line>
+                <arg>ls -la</arg>
+            </line>                   
         </script>
             
         <start-up-command name="get-queues">
