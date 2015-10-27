@@ -43,7 +43,7 @@
 		<script insertEnvironmentAfter="1">
 			<file-staging-location>${ptp_rm:directory#value}</file-staging-location>
 			<line>
-				<arg>#! /bin/bash -x</arg>
+				<arg>#! /bin/bash</arg>
 			</line>
 			<line>
 				<arg>#PJM --rsc-list "rscgrp=${ptp_rm:destination#value}"</arg>
@@ -64,10 +64,7 @@
 				<arg>#PJM --stgin "rank=*</arg>
 				<arg>${ptp_rm:executable#value}</arg>
 				<arg>%r:./"</arg>
-			</line>
-			<line>
-				<arg>#PJM -s</arg>
-			</line>			
+			</line>		
 			<line>
 				<arg>env</arg>
 			</line>
@@ -396,7 +393,7 @@
 		                </el2>
 		            </el1>
 		        </schemehint>
-		        <el0 cols="1" maxlevel="4" vgap="3" showtitle="true">
+		        <el0 cols="1" maxlevel="4" vgap="0" showtitle="true">
 		            <el1 min="0" max="7" cols="3" showtitle="false" vgap="1">
 		                <el2 min="0" max="2" cols="4" showtitle="false" hgap="3">
 		                    <el3 min="0" max="3" cols="1" showtitle="false" >
