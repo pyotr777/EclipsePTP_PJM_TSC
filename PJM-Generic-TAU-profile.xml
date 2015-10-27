@@ -275,6 +275,27 @@
                     </widget>
                 </composite>
                 
+                <!--  Staging group -->
+                <composite group="true">
+                	<layout>
+                		<grid-layout numColumns="4" makeColumnsEqualWidth="false" horizontalSpacing="10" verticalSpacing="15" />
+                	</layout>
+                	<widget type="label" style="SWT.LEFT">
+                		<layout-data>
+                			<grid-data horizontalAlign="SWT.BEGINNIG" grabExcessHorizontal="false" />
+                		</layout-data>
+                		<fixed-text>Stage-in file</fixed-text>
+                	</widget>
+                	<browse textStyle="SWT.BORDER" title="Browse">
+                        <text-layout-data>
+                            <grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" widthHint="200" grabExcessHorizontal="true" />                         
+                        </text-layout-data>
+                        <button-layout-data>
+                            <grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" widthHint="100" grabExcessHorizontal="false"/>
+                        </button-layout-data>
+                    </browse>
+                </composite>
+                
                 
                 
                 <!-- ATTRIBUTES group -->
