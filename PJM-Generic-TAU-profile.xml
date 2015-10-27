@@ -36,7 +36,22 @@
                 <regex expression="\d\d:\d\d:\d\d"/>
                 <error-message>format must be hh:mm:ss</error-message>
             </validator>
-        </attribute>        
+        </attribute>
+        
+        <attribute name="staginSource" type="string">
+        	<description>Local file for staging</description>
+        	<default></default>
+        </attribute>
+        <attribute name="staginDst" type="string">
+        	<description>Remote directory</description>
+        	<default>./</default>
+        </attribute>
+        <attribute name="staginRank" type="string">
+        	<description>MPI ranks</description>
+        	<default>*</default>
+        </attribute>
+        
+                
         <attribute name="executable" type="string">
             <description>Executable file</description>
         </attribute>
@@ -66,8 +81,8 @@
                 <arg>%r:./"</arg>
             </line>             
             <line>
-                <arg>#PJM --stgout "rank=* ./*.* ./"</arg>
-            </line>
+                <arg isUndefinedIfMatches="#PJM --stgin .{1}rank=\s+.*">#PJM --stgin "rank=${ptp_rm:staginRank#value} ${ptp_rm:staginSource#value} ${ptp_rm:staginDst#value}"</arg>
+            </line>            
             <line>
                 <arg>. /work/system/Env_base</arg>
             </line>
@@ -275,29 +290,6 @@
                     </widget>
                 </composite>
                 
-                <!--  Staging group -->
-                <composite group="true">
-                	<layout>
-                		<grid-layout numColumns="4" makeColumnsEqualWidth="false" horizontalSpacing="10" verticalSpacing="15" />
-                	</layout>
-                	<widget type="label" style="SWT.LEFT">
-                		<layout-data>
-                			<grid-data horizontalAlign="SWT.BEGINNIG" grabExcessHorizontal="false" />
-                		</layout-data>
-                		<fixed-text>Stage-in file</fixed-text>
-                	</widget>
-                	<browse textStyle="SWT.BORDER" title="Browse">
-                        <text-layout-data>
-                            <grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" widthHint="200" grabExcessHorizontal="true" />                         
-                        </text-layout-data>
-                        <button-layout-data>
-                            <grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" widthHint="100" grabExcessHorizontal="false"/>
-                        </button-layout-data>
-                    </browse>
-                </composite>
-                
-                
-                
                 <!-- ATTRIBUTES group -->
                 <composite group="true">
                     <layout>
@@ -358,7 +350,7 @@
                         <layout-data>
                             <grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
                         </layout-data>
-                        <fixed-text>${ptp_rm:elapse#description}</fixed-text>
+                        <fixed-text>${ptp_rm:elapse#description}: </fixed-text>
                     </widget>
                     <!-- row 4 -->
                     <widget type="label" style="SWT.LEFT">
@@ -376,12 +368,50 @@
                         <layout-data>
                             <grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
                         </layout-data>
-                        <fixed-text>${ptp_rm:mpiCommand#description}</fixed-text>
+                        <fixed-text>${ptp_rm:mpiCommand#description}: </fixed-text>
                     </widget>
-                    
-                    
-                </composite>    
-                <!-- Group -->
+                </composite>
+                 
+                <!--  STAGING group -->
+                <composite group="true">
+                	<layout>
+                		<grid-layout numColumns="7" makeColumnsEqualWidth="false" horizontalSpacing="10" verticalSpacing="15" />
+                	</layout>
+                	<widget type="label" style="SWT.LEFT">
+                		<layout-data>
+                			<grid-data horizontalAlign="SWT.BEGINNIG" verticalAlign="SWT.CENTER" grabExcessHorizontal="false" />
+                		</layout-data>
+                		<fixed-text>${ptp_rm:staginSource#description}: </fixed-text>
+                	</widget>
+                	<browse textStyle="SWT.BORDER" title="Browse" localOnly="true" attribute="staginSource">
+                        <text-layout-data>
+                            <grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" widthHint="200" grabExcessHorizontal="true" />                         
+                        </text-layout-data>
+                        <button-layout-data>
+                            <grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" widthHint="50" grabExcessHorizontal="false"/>
+                        </button-layout-data>
+                    </browse>
+                    <!-- rank -->
+                    <widget type="label" style="SWT.LEFT">
+                    	<fixed-text>${ptp_rm:staginRank#description}: </fixed-text>
+                    </widget>
+                    <widget type="text" style="SWT.BORDER" attribute="staginRank">
+                    	<layout-data>
+                            <grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" horizontalSpan="1" grabExcessHorizontal="false" widthHint="50"/>
+                        </layout-data>
+                    </widget>
+                    <!-- destination -->
+                    <widget type="label" style="SWT.LEFT">
+                    	<fixed-text>${ptp_rm:staginDst#description}: </fixed-text>
+                    </widget>
+                    <widget type="text" style="SWT.BORDER" attribute="staginDst">
+                    	<layout-data>
+                            <grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" horizontalSpan="1" grabExcessHorizontal="false" widthHint="200"/>
+                        </layout-data>
+                    </widget>
+                </composite>                
+                
+                <!-- EXECUTABLE Group -->
                 <composite group="true">
                     <layout>
                         <grid-layout numColumns="3" makeColumnsEqualWidth="false"  horizontalSpacing="10" verticalSpacing="15"/>
@@ -395,7 +425,7 @@
                         </layout-data>
                         <fixed-text>Executable:</fixed-text>                        
                     </widget>               
-                    <browse textStyle="SWT.BORDER" title="Browse" attribute="executable">
+                    <browse textStyle="SWT.BORDER" title="Browse" localOnly="true" attribute="executable">
                         <text-layout-data>
                             <grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" widthHint="200" grabExcessHorizontal="true" />                         
                         </text-layout-data>
