@@ -997,6 +997,10 @@
         </launch-tab>
     </control-data> 
     <monitor-data schedulerType="PJM">
-        
+    	<workflow>
+    		<vardefs>
+    		 	<var key="conf" value="samples/LML_da_PJM.conf"/>
+    		 </vardefs>
+    	</workflow>     
     </monitor-data>
 </resource-manager-builder>
