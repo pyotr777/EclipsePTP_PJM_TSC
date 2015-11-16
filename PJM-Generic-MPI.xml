@@ -1007,7 +1007,6 @@
             </dynamic>
         </launch-tab>
     </control-data> 
-    <monitor-data schedulerType="PJM">
-        
+    <monitor-data schedulerType="PJM" refreshFrequencyInSeconds="90">        
     </monitor-data>
 </resource-manager-builder>
