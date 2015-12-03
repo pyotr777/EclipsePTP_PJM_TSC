@@ -189,13 +189,6 @@
 						<value>#value</value>
 						<value>RNO</value>
 						<set field="value">
-							<entry value="COMPLETED"/>
-						</set>
-					</test>
-					<test op="EQ">
-						<value>#value</value>
-						<value>SOT</value>
-						<set field="value">
 							<entry value="RUNNING"/>
 						</set>
 					</test>
@@ -270,9 +263,7 @@
 						</layout-data>
 						<items-from>queues</items-from>
 					</widget>
-				</composite>
-				
-				
+				</composite>				
 				
 				<!-- ATTRIBUTES group -->
 				<composite group="true">
@@ -379,40 +370,28 @@
 					</browse>
 				</composite>
 			</dynamic>
+			<import title="Import PJM Script">
+				<export-for-override name="exportedEnv" style="SWT.BORDER | SWT.MULTI | SWT.V_SCROLL" sort="true" type="table"
+					initialAllChecked="true" tooltipEnabled="true">
+					<layout-data>
+						<grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" grabExcessHorizontal="true" heightHint="80"/>
+					</layout-data>
+					<column-data name="Name" width="175" resizable="true">
+						<tooltip>Multi-select and click checkbox to apply change to all rows.</tooltip>
+					</column-data>
+					<column-data name="Value" width="200" resizable="true">
+						<tooltip>Click to activate value widget.</tooltip>
+					</column-data>
+					<items>
+						<include>destination</include>
+						<include>nodes</include>
+						<include>elapse</include>
+						<include>executable</include>
+					</items>
+				</export-for-override>
+			</import>
 		</launch-tab>
 	</control-data>	
 	<monitor-data schedulerType="PJM">
-		<rm:layout version="1.0" xmlns="" xmlns:rm="http://eclipse.org/ptp/rm">
-			<nodedisplaylayout id="nodedisplay" gid="org.eclipse.ptp.rm.lml.ui.SystemMonitorView" active="true">
-		        <schemehint>
-		            <el1 min="0" max="7" tagname="tofu_unit" mask="0xFF0100%01d">
-		                <el2 min="0" max="2" tagname="board" mask="%01d">
-		                    <el3 min="0" max="3" tagname="node" mask="%01d">
-		                        <el4 tagname="core" min="0" max="15" mask="-c%02d"></el4>
-		                    </el3>
-		                </el2>
-		            </el1>
-		        </schemehint>
-		        <el0 cols="1" maxlevel="4" vgap="0" showtitle="true">
-		            <el1 min="0" max="7" cols="3" showtitle="false" vgap="1">
-		                <el2 min="0" max="2" cols="4" showtitle="false" hgap="3">
-		                    <el3 min="0" max="3" cols="1" showtitle="false" >
-		                        <el4 min="0" max="15" showtitle="false" ></el4>
-		                    </el3>
-		                </el2>
-		            </el1>
-		        </el0>
-		    </nodedisplaylayout>
-		
-		    <tablelayout id="tl_Run" gid="org.eclipse.ptp.rm.lml.ui.ActiveJobsView" active="true" contenthint="jobs">
-		        <column cid="1" pos="1" width="0.1" active="true" key="step" />
-		        <column cid="2" pos="2" width="0.1" active="true" key="state" />
-		        <column cid="3" pos="3" width="0.1" active="true" key="totalcores" />
-		        <column cid="4" pos="4" width="0.4" active="true" key="vnodelist" />
-		        <column cid="5" pos="5" width="0.2" active="true" key="queuedate" />
-		        <column cid="6" pos="6" width="0.2" active="true" key="wall" />
-		        <column cid="7" pos="7" width="0.5" active="true" key="comment" />
-		    </tablelayout>
-		</rm:layout>	
 	</monitor-data>
 </resource-manager-builder>
