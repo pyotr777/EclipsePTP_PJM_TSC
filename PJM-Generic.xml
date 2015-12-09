@@ -326,25 +326,7 @@
 							<grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
 						</layout-data>
 						<fixed-text>${ptp_rm:elapse#description}</fixed-text>
-					</widget>
-					<!-- row 4 -->
-					<widget type="label" style="SWT.LEFT">
-						<layout-data>
-							<grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
-						</layout-data>
-						<fixed-text>MPI Command: </fixed-text>
-					</widget>
-					<widget type="combo" style="SWT.BORDER" readOnly="true" attribute="mpiCommand">
-						<layout-data>
-							<grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" horizontalSpan="2" grabExcessHorizontal="false"/>
-						</layout-data>
-					</widget>
-					<widget type="label" style="SWT.LEFT">
-						<layout-data>
-							<grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
-						</layout-data>
-						<fixed-text>${ptp_rm:mpiCommand#description}</fixed-text>
-					</widget>				
+					</widget>			
 				</composite>	
 				<!-- Group -->
 				<composite group="true">
