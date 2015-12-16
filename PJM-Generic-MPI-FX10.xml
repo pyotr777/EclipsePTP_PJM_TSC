@@ -91,15 +91,6 @@
                 <arg>. /work/system/Env_base</arg>
             </line>
             <line>
-                <arg>echo $HOSTNAME</arg>
-            </line>
-            <line>
-                <arg>pwd</arg>
-            </line>            
-            <line>
-                <arg>env | grep -i tau</arg>
-            </line>
-            <line>
                 <arg>mpiexec ${ptp_rm:executable#value}</arg>
             </line>  
             <line>
