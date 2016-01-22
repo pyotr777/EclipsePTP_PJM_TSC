@@ -37,7 +37,7 @@
 			<default>1</default>
 		</attribute>
 		<attribute name="elapse" type="string">
-			<description>Maximum executable time for a job</description>
+			<description>Maximum execution time for a job</description>
 			<tooltip>Format: [[hours:]minutes:]seconds[.milliseconds].</tooltip>
 			<default>00:01:00</default>
 			<validator>
@@ -48,6 +48,7 @@
 		<attribute name="executable" type="string">
 			<description>Executable file</description>
 		</attribute>
+		<attribute name="exec-remote" visible="false"></attribute>
 		<!-- Stage in -->
 		<attribute name="useStageIn" type="boolean">
 			<default>false</default>
@@ -166,7 +167,12 @@
 		<attribute name="arbitraryText1" type="string" />    
 		<attribute name="arbitraryText2" type="string" />
 		<attribute name="arbitraryText3" type="string" />  
-		
+		<managed-files>
+			<file-staging-location>.eclipsesettings</file-staging-location>
+			<file name="exec-remote">
+				<path>${ptp_rm:executable#value}</path>
+			</file>
+		</managed-files>
 		<script insertEnvironmentAfter="15">
 			<file-staging-location>${ptp_rm:directory#value}</file-staging-location>
 			<line>
@@ -191,6 +197,9 @@
 				<arg>#PJM --stgin "rank=*</arg>
 				<arg>${ptp_rm:executable#value}</arg>
 				<arg>%r:./"</arg>
+			</line>
+			<line>
+				<arg>#PJM -V</arg>
 			</line>
 			<line>
 				<arg isUndefinedIfMatches="#PJM --stgin-basedir ">#PJM --stgin-basedir ${ptp_rm:staginBasedir#value}</arg>
@@ -235,7 +244,10 @@
 				<arg>. /work/system/Env_base</arg>
 			</line>
 			<line>
-				<arg>mpiexec ${ptp_rm:executable#value}</arg>
+				<arg>echo ${EXE}</arg>
+			</line>
+			<line>
+				<arg>mpiexec ${EXE}</arg>
 			</line>  
 			<line>
 				<arg>ls -la</arg>
@@ -261,7 +273,9 @@
 		<submit-batch name="submit-batch" directory="${ptp_rm:directory#value}" waitForId="true" redirectStderr="true">
 			<arg>pjsub</arg>
 			<arg>${ptp_rm:managed_file_for_script#value}</arg>
-			
+			<environment name="EXE">
+				<arg isUndefinedIfMatches="-f">-f ${ptp_rm:exec-remote#value}</arg>
+			</environment>
 			<stdout-parser delim="\n">
 				<target ref="@jobId">
 					<match>
@@ -490,7 +504,7 @@
 						<layout-data>
 							<grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
 						</layout-data>
-						<fixed-text>${ptp_rm:elapse#description}: </fixed-text>
+						<fixed-text>${ptp_rm:elapse#description}</fixed-text>
 					</widget>					
 				</composite>
 				 
