@@ -45,10 +45,10 @@
 				<error-message>format must be hh:mm:ss</error-message>
 			</validator>
 		</attribute>
-		<attribute name="exec-local" type="string">
+		<!-- attribute name="execlocal" type="string">
 			<description>Executable file</description>
-		</attribute>
-		<!-- attribute name="exec-local" visible="false"></attribute-->
+		</attribute-->
+		<attribute name="execlocal" visible="false"></attribute>
 		<!-- Stage in -->
 		<attribute name="useStageIn" type="boolean">
 			<default>false</default>
@@ -167,12 +167,14 @@
 		<attribute name="arbitraryText1" type="string" />    
 		<attribute name="arbitraryText2" type="string" />
 		<attribute name="arbitraryText3" type="string" />  
+		
 		<managed-files>
 			<file-staging-location>.</file-staging-location>
 			<file name="exec-remote">
-				<path>${ptp_rm:exec-local#value}</path>
+				<path>${ptp_rm:execlocal#value}</path>
 			</file>
 		</managed-files>
+		
 		<script insertEnvironmentAfter="15">
 			<file-staging-location>${ptp_rm:directory#value}</file-staging-location>
 			<line>
@@ -195,7 +197,7 @@
 			</line>
 			<line>
 				<arg>#PJM --stgin "rank=*</arg>
-				<arg>./${ptp_rm:exec-remote#value}</arg>
+				<arg>${ptp_rm:executablePath#value}</arg>
 				<arg>%r:./"</arg>
 			</line>
 			<line>
@@ -250,7 +252,7 @@
 				<arg>echo remote=${ptp_rm:exec-remote#value}</arg>
 			</line>		
 			<line>
-				<arg>echo local=${ptp_rm:exec-local#value}</arg>
+				<arg>echo local=${ptp_rm:execlocal#value}</arg>
 			</line>	
 			<line>
 				<arg>mpiexec ${EXE}</arg>
@@ -529,7 +531,7 @@
 						</layout-data>
 						<fixed-text>Executable:</fixed-text>                        
 					</widget>               
-					<browse textStyle="SWT.BORDER" title="Browse" localOnly="true" attribute="exec-local">
+					<browse textStyle="SWT.BORDER" title="Browse" localOnly="true" attribute="execlocal">
 						<text-layout-data>
 							<grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" widthHint="200" grabExcessHorizontal="false" />                         
 						</text-layout-data>
