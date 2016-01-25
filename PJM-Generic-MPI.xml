@@ -45,10 +45,10 @@
 				<error-message>format must be hh:mm:ss</error-message>
 			</validator>
 		</attribute>
-		<attribute name="executable" type="string">
+		<attribute name="exec-local" type="string">
 			<description>Executable file</description>
 		</attribute>
-		<attribute name="exec-remote" visible="false"></attribute>
+		<!-- attribute name="exec-local" visible="false"></attribute-->
 		<!-- Stage in -->
 		<attribute name="useStageIn" type="boolean">
 			<default>false</default>
@@ -168,9 +168,9 @@
 		<attribute name="arbitraryText2" type="string" />
 		<attribute name="arbitraryText3" type="string" />  
 		<managed-files>
-			<file-staging-location>.eclipsesettings</file-staging-location>
+			<file-staging-location>.</file-staging-location>
 			<file name="exec-remote">
-				<path>${ptp_rm:executable#value}</path>
+				<path>${ptp_rm:exec-local#value}</path>
 			</file>
 		</managed-files>
 		<script insertEnvironmentAfter="15">
@@ -195,11 +195,11 @@
 			</line>
 			<line>
 				<arg>#PJM --stgin "rank=*</arg>
-				<arg>${ptp_rm:executable#value}</arg>
+				<arg>./${ptp_rm:exec-remote#value}</arg>
 				<arg>%r:./"</arg>
 			</line>
 			<line>
-				<arg>#PJM -V</arg>
+				<arg>#PJM -X</arg>
 			</line>
 			<line>
 				<arg isUndefinedIfMatches="#PJM --stgin-basedir ">#PJM --stgin-basedir ${ptp_rm:staginBasedir#value}</arg>
@@ -247,6 +247,12 @@
 				<arg>echo ${EXE}</arg>
 			</line>
 			<line>
+				<arg>echo remote=${ptp_rm:exec-remote#value}</arg>
+			</line>		
+			<line>
+				<arg>echo local=${ptp_rm:exec-local#value}</arg>
+			</line>	
+			<line>
 				<arg>mpiexec ${EXE}</arg>
 			</line>  
 			<line>
@@ -274,7 +280,7 @@
 			<arg>pjsub</arg>
 			<arg>${ptp_rm:managed_file_for_script#value}</arg>
 			<environment name="EXE">
-				<arg isUndefinedIfMatches="-f">-f ${ptp_rm:exec-remote#value}</arg>
+				<arg isUndefinedIfMatches="">${ptp_rm:exec-remote#value}</arg>
 			</environment>
 			<stdout-parser delim="\n">
 				<target ref="@jobId">
@@ -523,7 +529,7 @@
 						</layout-data>
 						<fixed-text>Executable:</fixed-text>                        
 					</widget>               
-					<browse textStyle="SWT.BORDER" title="Browse" localOnly="true" attribute="executable">
+					<browse textStyle="SWT.BORDER" title="Browse" localOnly="true" attribute="exec-local">
 						<text-layout-data>
 							<grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" widthHint="200" grabExcessHorizontal="false" />                         
 						</text-layout-data>
@@ -531,7 +537,8 @@
 							<grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" widthHint="100" grabExcessHorizontal="false"/>
 						</button-layout-data>
 					</browse>
-				</composite>
+				</composite>			
+				
 			</dynamic>
 			
 			<!-- Staging tab -->
