@@ -27,8 +27,9 @@
 		</attribute>
 		
 		<attribute name="mpiCommand" type="choice">
-			<description>Which mpi command to use.</description>
-			<choice>,mpiexec,mpirun</choice>
+			<description>Which mpi command to use</description>
+			<choice>mpiexec,mpirun</choice>
+			<default>mpiexec</default>
 		</attribute>
 		
 		<attribute name="nodes" type="string">
@@ -44,9 +45,6 @@
 				<regex expression="\d\d:\d\d:\d\d"/>
 				<error-message>format must be hh:mm:ss</error-message>
 			</validator>
-		</attribute>
-		<attribute name="executable" type="string">
-			<description>Executable file</description>
 		</attribute>
 		<!-- Stage in -->
 		<attribute name="useStageIn" type="boolean">
@@ -189,7 +187,7 @@
 			</line>
 			<line>
 				<arg>#PJM --stgin "rank=*</arg>
-				<arg>${ptp_rm:executable#value}</arg>
+				<arg>${ptp_rm:executablePath#value}</arg>
 				<arg>%r:./"</arg>
 			</line>
 			<line>
@@ -234,8 +232,11 @@
 			<line>
 				<arg>. /work/system/Env_base</arg>
 			</line>
+			<line><arg>COMMAND=${ptp_rm:mpiCommand#value}</arg></line>
+			<line><arg>EXEFILE=./`basename ${ptp_rm:executablePath#value}`</arg></line>
 			<line>
-				<arg>mpiexec ${ptp_rm:executable#value}</arg>
+				<arg resolve="false">${COMMAND}</arg>
+				<arg resolve="false">${EXEFILE}</arg>
 			</line>  
 			<line>
 				<arg>ls -la</arg>
@@ -490,34 +491,28 @@
 						<layout-data>
 							<grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
 						</layout-data>
-						<fixed-text>${ptp_rm:elapse#description}: </fixed-text>
-					</widget>					
-				</composite>
-				 
-				
-				<!-- EXECUTABLE Group -->
-				<composite group="true">
-					<layout>
-						<grid-layout numColumns="3" makeColumnsEqualWidth="false"  horizontalSpacing="10" verticalSpacing="15"/>
-					</layout>
-					<layout-data>
-						<grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER"  grabExcessHorizontal="false" grabExcessVertical="false"/>
-					</layout-data>
+						<fixed-text>${ptp_rm:elapse#description}</fixed-text>
+					</widget>	
+					<!--  row 3 MPI Command -->
 					<widget type="label" style="SWT.LEFT">
 						<layout-data>
 							<grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
 						</layout-data>
-						<fixed-text>Executable:</fixed-text>                        
-					</widget>               
-					<browse textStyle="SWT.BORDER" title="Browse" localOnly="true" attribute="executable">
-						<text-layout-data>
-							<grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" widthHint="200" grabExcessHorizontal="false" />                         
-						</text-layout-data>
-						<button-layout-data>
-							<grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" widthHint="100" grabExcessHorizontal="false"/>
-						</button-layout-data>
-					</browse>
+						<fixed-text>MPI Launch Command: </fixed-text>
+					</widget>
+					<widget type="combo" style="SWT.BORDER" readOnly="false" attribute="mpiCommand">
+						<layout-data>
+							<grid-data horizontalAlign="SWT.FILL" horizontalSpan="1" grabExcessHorizontal="false"/>
+						</layout-data>
+					</widget>
+					<widget type="label" style="SWT.LEFT">
+						<layout-data>
+							<grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
+						</layout-data>
+						<fixed-text>${ptp_rm:mpiCommand#description}</fixed-text>
+					</widget>	
 				</composite>
+
 			</dynamic>
 			
 			<!-- Staging tab -->
