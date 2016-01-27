@@ -385,6 +385,11 @@
 							<entry value="SYSTEM_ON_HOLD"/>
 						</set>
 					</test>
+					<else>
+                    	<set field="value">
+                            <entry value="COMPLETED"/>
+                        </set>
+                    </else>
 				</target>
 			</stdout-parser>
 			<stderr-parser delim="\n">
