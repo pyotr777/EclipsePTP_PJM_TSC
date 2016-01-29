@@ -1049,6 +1049,6 @@
 			</import>
 		</launch-tab>
 	</control-data> 
-	<monitor-data schedulerType="PJM" refreshFrequencyInSeconds="90">        
+	<monitor-data schedulerType="PJM" refreshFrequencyInSeconds="120">        
 	</monitor-data>
 </resource-manager-builder>
