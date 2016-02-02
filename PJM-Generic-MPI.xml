@@ -28,7 +28,7 @@
 		
 		<attribute name="mpiCommand" type="choice">
 			<description>Which MPI command to use</description>
-			<choice>mpiexec,mpirun,other</choice>
+			<choice>mpiexec,mpirun,custom</choice>
 			<default>mpiexec</default>
 		</attribute>
 		<attribute name="mpiCommand-other" visible="false">
@@ -236,7 +236,7 @@
 				<arg>. /work/system/Env_base</arg>
 			</line>
 			<line>
-				<arg isUndefinedIfMatches="COMMAND=">COMMAND=${ptp_rm:mpiCommand#value}</arg>				
+				<arg isUndefinedIfMatches="COMMAND=custom">COMMAND=${ptp_rm:mpiCommand#value}</arg>				
 			</line>
 			<line>
 				<arg isUndefinedIfMatches="COMMAND=">COMMAND=${ptp_rm:mpiCommand-other#value}</arg>
