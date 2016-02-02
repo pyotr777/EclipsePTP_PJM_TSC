@@ -27,11 +27,14 @@
         </attribute>
         
         <attribute name="mpiCommand" type="choice">
-            <description>Which mpi command to use</description>
-            <choice>,mpiexec,mpirun</choice>
+			<description>Which MPI command to use</description>
+			<choice>mpiexec,mpirun,custom</choice>
             <default>mpiexec</default>
         </attribute>        
-        
+		<attribute name="mpiCommand-other" visible="false">
+			<description>MPI command</description>
+		</attribute>		
+		<attribute name="useCustomMPI" visible="false" />
         <attribute name="nodes" type="string">
             <description>The number of nodes and node shape allocated to job</description>
             <tooltip>node=N node=N1xN2 node=N1xN2xN3</tooltip>
@@ -80,7 +83,13 @@
             <line>
                 <arg>. /work/system/Env_base</arg>
             </line>
-            <line><arg>COMMAND=${ptp_rm:mpiCommand#value}</arg></line>
+			<line>
+				<arg isUndefinedIfMatches="COMMAND=custom">COMMAND=${ptp_rm:mpiCommand#value}</arg>				
+			</line>
+			<line>
+				<arg isUndefinedIfMatches="COMMAND=">COMMAND=${ptp_rm:mpiCommand-other#value}</arg>
+			</line>
+			
 			<line><arg>EXEFILE=./`basename ${ptp_rm:executablePath#value}`</arg></line>
 			<line>
 				<arg resolve="false">${COMMAND}</arg>
@@ -364,7 +373,50 @@
 						</layout-data>
 						<fixed-text>${ptp_rm:mpiCommand#description}</fixed-text>
 					</widget>	
-                </composite>
+					<!--  row 4 Cutom MPI Command -->
+					<composite group="true">
+						<layout>
+							<grid-layout numColumns="3" makeColumnsEqualWidth="false" horizontalSpacing="5" verticalSpacing="15" />
+						</layout>
+						<layout-data>
+							<grid-data horizontalAlign="SWT.LEFT"  verticalAlign="SWT.FILL" horizontalSpan="3"  grabExcessHorizontal="true" grabExcessVertical="false"/>
+						</layout-data>
+						<widget type="checkbox" title="Use custom MPI command" buttonId="useCustomMPIcommand" attribute="useCustomMPI">
+							<layout-data>
+								<grid-data horizontalAlign="SWT.LEFT" verticalAlign="SWT.CENTER" horizontalSpan="3" grabExcessHorizontal="false"/>
+							</layout-data>
+						</widget>
+					
+						
+						<widget type="label" style="SWT.LEFT">
+							<layout-data>
+								<grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
+							</layout-data>
+							<fixed-text>Custom MPI Launch Command: </fixed-text>
+							<control-state>
+								<show-if button="useCustomMPIcommand" selected="true"/>
+							</control-state>
+						</widget>
+						<widget type="text" style="SWT.BORDER" attribute="mpiCommand-other">
+							<layout-data>
+								<grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" horizontalSpan="1" grabExcessHorizontal="false" widthHint="150"/>
+							</layout-data>
+							<control-state>
+								<show-if button="useCustomMPIcommand" selected="true"/>
+							</control-state>
+						</widget>
+						<widget type="label" style="SWT.LEFT">
+							<layout-data>
+								<grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
+							</layout-data>
+							<fixed-text>${ptp_rm:mpiCommand-other#description}</fixed-text>
+							<control-state>
+								<show-if button="useCustomMPIcommand" selected="true"/>
+							</control-state>
+						</widget>
+                	</composite>
+				</composite>
+
             </dynamic>
             
             <!-- Advanced tab -->
