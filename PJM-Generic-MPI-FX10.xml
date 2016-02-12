@@ -25,16 +25,10 @@
             <description>Designation of the queue to which to submit the job.</description>
             <tooltip>Format: queue[@server].</tooltip>
         </attribute>
-        
-        <attribute name="mpiCommand" type="choice">
-			<description>Which MPI command to use</description>
-			<choice>mpiexec,mpirun,custom</choice>
+        <attribute name="mpiCommand" type="string">
+            <description>Which MPI command to use</description>
             <default>mpiexec</default>
-        </attribute>        
-		<attribute name="mpiCommand-other" visible="false">
-			<description>MPI command</description>
-		</attribute>		
-		<attribute name="useCustomMPI" visible="false" />
+        </attribute>
         <attribute name="nodes" type="string">
             <description>The number of nodes and node shape allocated to job</description>
             <tooltip>node=N node=N1xN2 node=N1xN2xN3</tooltip>
@@ -83,18 +77,15 @@
             <line>
                 <arg>. /work/system/Env_base</arg>
             </line>
-			<line>
-				<arg isUndefinedIfMatches="COMMAND=custom">COMMAND=${ptp_rm:mpiCommand#value}</arg>				
-			</line>
-			<line>
-				<arg isUndefinedIfMatches="COMMAND=">COMMAND=${ptp_rm:mpiCommand-other#value}</arg>
-			</line>
-			
-			<line><arg>EXEFILE=./`basename ${ptp_rm:executablePath#value}`</arg></line>
-			<line>
-				<arg resolve="false">${COMMAND}</arg>
-				<arg resolve="false">${EXEFILE}</arg>
-			</line>  
+            <line>
+                <arg>COMMAND=${ptp_rm:mpiCommand#value}</arg>             
+            </line>
+            
+            <line><arg>EXEFILE=./`basename ${ptp_rm:executablePath#value}`</arg></line>
+            <line>
+                <arg resolve="false">${COMMAND}</arg>
+                <arg resolve="false">${EXEFILE}</arg>
+            </line>  
             <line>
                 <arg>ls -la</arg>
             </line>                   
@@ -187,12 +178,12 @@
                         </set>
                     </test>
                     <test op="EQ">
-						<value>#value</value>
-						<value>RDY</value>
-						<set field="value">
-							<entry value="READY"/>
-						</set>
-					</test>
+                        <value>#value</value>
+                        <value>RDY</value>
+                        <set field="value">
+                            <entry value="READY"/>
+                        </set>
+                    </test>
                     <test op="EQ">
                         <value>#value</value>
                         <value>RUN</value>
@@ -243,7 +234,7 @@
                         </set>
                     </test>
                     <else>
-                    	<set field="value">
+                        <set field="value">
                             <entry value="COMPLETED"/>
                         </set>
                     </else>
@@ -356,66 +347,24 @@
                         <fixed-text>${ptp_rm:elapse#description}</fixed-text>
                     </widget>
                     <!--  row 3 MPI Command -->
-					<widget type="label" style="SWT.LEFT">
-						<layout-data>
-							<grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
-						</layout-data>
-						<fixed-text>MPI Launch Command: </fixed-text>
-					</widget>
-					<widget type="combo" style="SWT.BORDER" readOnly="false" attribute="mpiCommand">
-						<layout-data>
-							<grid-data horizontalAlign="SWT.FILL" horizontalSpan="1" grabExcessHorizontal="false"/>
-						</layout-data>
-					</widget>
-					<widget type="label" style="SWT.LEFT">
-						<layout-data>
-							<grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
-						</layout-data>
-						<fixed-text>${ptp_rm:mpiCommand#description}</fixed-text>
-					</widget>	
-					<!--  row 4 Cutom MPI Command -->
-					<composite group="true">
-						<layout>
-							<grid-layout numColumns="3" makeColumnsEqualWidth="false" horizontalSpacing="5" verticalSpacing="15" />
-						</layout>
-						<layout-data>
-							<grid-data horizontalAlign="SWT.LEFT"  verticalAlign="SWT.FILL" horizontalSpan="3"  grabExcessHorizontal="true" grabExcessVertical="false"/>
-						</layout-data>
-						<widget type="checkbox" title="Use custom MPI command" buttonId="useCustomMPIcommand" attribute="useCustomMPI">
-							<layout-data>
-								<grid-data horizontalAlign="SWT.LEFT" verticalAlign="SWT.CENTER" horizontalSpan="3" grabExcessHorizontal="false"/>
-							</layout-data>
-						</widget>
-					
-						
-						<widget type="label" style="SWT.LEFT">
-							<layout-data>
-								<grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
-							</layout-data>
-							<fixed-text>Custom MPI Launch Command: </fixed-text>
-							<control-state>
-								<show-if button="useCustomMPIcommand" selected="true"/>
-							</control-state>
-						</widget>
-						<widget type="text" style="SWT.BORDER" attribute="mpiCommand-other">
-							<layout-data>
-								<grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" horizontalSpan="1" grabExcessHorizontal="false" widthHint="150"/>
-							</layout-data>
-							<control-state>
-								<show-if button="useCustomMPIcommand" selected="true"/>
-							</control-state>
-						</widget>
-						<widget type="label" style="SWT.LEFT">
-							<layout-data>
-								<grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
-							</layout-data>
-							<fixed-text>${ptp_rm:mpiCommand-other#description}</fixed-text>
-							<control-state>
-								<show-if button="useCustomMPIcommand" selected="true"/>
-							</control-state>
-						</widget>
-                	</composite>
-				</composite>
+                    <widget type="label" style="SWT.LEFT">
+                        <layout-data>
+                            <grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
+                        </layout-data>
+                        <fixed-text>MPI Launch Command: </fixed-text>
+                    </widget>
+                    <widget type="text" style="SWT.BORDER" attribute="mpiCommand">
+                        <layout-data>
+                            <grid-data horizontalAlign="SWT.FILL" horizontalSpan="1" grabExcessHorizontal="false"/>
+                        </layout-data>
+                    </widget>
+                    <widget type="label" style="SWT.LEFT">
+                        <layout-data>
+                            <grid-data horizontalAlign="SWT.BEGINNING" verticalAlign="SWT.CENTER" grabExcessHorizontal="false"/>
+                        </layout-data>
+                        <fixed-text>${ptp_rm:mpiCommand#description}</fixed-text>
+                    </widget>
+                </composite>
 
             </dynamic>
             
@@ -433,47 +382,47 @@
                         <grid-data horizontalAlign="SWT.FILL"  verticalAlign="SWT.FILL"  grabExcessHorizontal="true" grabExcessVertical="true"/>
                     </layout-data>
                     <widget type="label" style="SWT.LEFT">
-                    	<fixed-text>Arbitrary lines to add to job script: </fixed-text>
+                        <fixed-text>Arbitrary lines to add to job script: </fixed-text>
                     </widget>
                     <widget type="text" style="SWT.BORDER" attribute="arbitraryText1">
                         <layout-data>
-							<grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.FILL" grabExcessHorizontal="false" widthHint="400" grabExcessVertical="false"/>
-						</layout-data>
+                            <grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.FILL" grabExcessHorizontal="false" widthHint="400" grabExcessVertical="false"/>
+                        </layout-data>
                     </widget>
                     <widget type="text" style="SWT.BORDER" attribute="arbitraryText2">
                         <layout-data>
-							<grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.FILL" grabExcessHorizontal="false" widthHint="400" grabExcessVertical="false"/>
-						</layout-data>
+                            <grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.FILL" grabExcessHorizontal="false" widthHint="400" grabExcessVertical="false"/>
+                        </layout-data>
                     </widget>
                     <widget type="text" style="SWT.BORDER" attribute="arbitraryText3">
                         <layout-data>
-							<grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.FILL" grabExcessHorizontal="false" widthHint="400" grabExcessVertical="false"/>
-						</layout-data>
+                            <grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.FILL" grabExcessHorizontal="false" widthHint="400" grabExcessVertical="false"/>
+                        </layout-data>
                     </widget>
                 </composite>
             </dynamic>
             
             <!--  Import tab -->
             <import title="Import PJM Script">
-				<export-for-override name="exportedEnv" style="SWT.BORDER | SWT.MULTI | SWT.V_SCROLL" sort="true" type="table"
-					initialAllChecked="true" tooltipEnabled="true">
-					<layout-data>
-						<grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" grabExcessHorizontal="true" heightHint="80"/>
-					</layout-data>
-					<column-data name="Name" width="175" resizable="true">
-						<tooltip>Multi-select and click checkbox to apply change to all rows.</tooltip>
-					</column-data>
-					<column-data name="Value" width="200" resizable="true">
-						<tooltip>Click to activate value widget.</tooltip>
-					</column-data>
-					<items>
-						<include>destination</include>
-						<include>nodes</include>
-						<include>elapse</include>
-						<include>executable</include>
-					</items>
-				</export-for-override>
-			</import>
+                <export-for-override name="exportedEnv" style="SWT.BORDER | SWT.MULTI | SWT.V_SCROLL" sort="true" type="table"
+                    initialAllChecked="true" tooltipEnabled="true">
+                    <layout-data>
+                        <grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" grabExcessHorizontal="true" heightHint="80"/>
+                    </layout-data>
+                    <column-data name="Name" width="175" resizable="true">
+                        <tooltip>Multi-select and click checkbox to apply change to all rows.</tooltip>
+                    </column-data>
+                    <column-data name="Value" width="200" resizable="true">
+                        <tooltip>Click to activate value widget.</tooltip>
+                    </column-data>
+                    <items>
+                        <include>destination</include>
+                        <include>nodes</include>
+                        <include>elapse</include>
+                        <include>executable</include>
+                    </items>
+                </export-for-override>
+            </import>
         </launch-tab>
     </control-data> 
     <monitor-data schedulerType="PJM" refreshFrequencyInSeconds="15">        
