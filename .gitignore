@@ -1,4 +1,5 @@
 *.xml
 .*
 !.gitignore
-!PJM-*
+!PJM*
+!.project
