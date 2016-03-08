@@ -9,11 +9,11 @@ Refer to http://pyotr777.github.io/EclipsePTP_PJM_TSC for more information on Ec
 ### Installation procedure.
 
 1. In Eclipse PTP create targetConfigurations project: 
-  1. Import.. / Target System Configurations / Target COnfigurations from plugin
+  1. Import.. / Target System Configurations / Target Configurations from plugin
   2. Select any TSC
-2. In terminal clone repository:
+2. In terminal:
   1. cd to targetConfigurations project folder.
-  2. ```rm *```
+  2. ```rm .* *```
   2. ```git clone https://github.com/pyotr777/EclipsePTP_PJM_TSC.git```
   3. ```cd EclipsePTP_PJM_TSC```
   4. ```./install.sh```
