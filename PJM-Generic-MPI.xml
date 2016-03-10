@@ -144,6 +144,17 @@
             <default>*</default>
         </attribute>
         <attribute name="stgoutDir2options" type="string" />
+
+        <!-- More staging files -->
+        <attribute name="staginMore1" type="string">
+            <default>default value</default>
+        </attribute>
+        <attribute name="staginMore2" type="string">
+            <default>default value</default>
+        </attribute>
+        <attribute name="staginMore3" type="string">
+            <default>default value</default>
+        </attribute>
         
         <!-- Arbitrary lines from Advanced tab -->
         <attribute name="arbitraryText1" type="string" />    
@@ -917,7 +928,38 @@
                     <control-state>
                         <hide-if button="useStageOutButton01" selected="false"/>
                     </control-state>
-                </composite>                
+                </composite>
+                
+                
+                <!--  VIEWER -->
+				<!-- Viewer for staging group -->
+				<composite group="true">
+					<layout>
+						<grid-layout numColumns="1"/>
+					</layout>
+					<layout-data>
+						<grid-data horizontalAlign="SWT.FILL" grabExcessHorizontal="true"/>
+					</layout-data>
+					<title>More staging</title>
+					<viewer name="allAttributes" style="SWT.BORDER | SWT.MULTI" sort="true" type="table" initialAllChecked="true">
+						<layout-data>
+							<grid-data horizontalAlign="SWT.FILL" grabExcessHorizontal="false"/>
+						</layout-data>
+						<column-data name="Name" width="175">
+							<tooltip>Double-click on selected rows toggles their checked value.</tooltip>
+						</column-data>
+						<column-data name="Value" width="200">
+							<tooltip>Click to activate value widget.</tooltip>
+						</column-data>
+						<items allDiscovered="true">
+							<include>staginMore1</include>
+	                        <include>staginMore2</include>
+	                        <include>staginMore3</include>
+						</items>
+					</viewer>
+				</composite>
+                
+                
             </dynamic>
             
             <!-- Advanced tab -->
