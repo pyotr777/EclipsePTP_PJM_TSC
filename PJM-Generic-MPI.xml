@@ -956,24 +956,6 @@
             
             <!--  Import tab -->
             <import title="Import PJM Script">
-                <export-for-override name="exportedEnv" style="SWT.BORDER | SWT.MULTI | SWT.V_SCROLL" sort="true" type="table"
-                    initialAllChecked="true" tooltipEnabled="true">
-                    <layout-data>
-                        <grid-data horizontalAlign="SWT.FILL" verticalAlign="SWT.CENTER" grabExcessHorizontal="true" heightHint="80"/>
-                    </layout-data>
-                    <column-data name="Name" width="175" resizable="true">
-                        <tooltip>Multi-select and click checkbox to apply change to all rows.</tooltip>
-                    </column-data>
-                    <column-data name="Value" width="200" resizable="true">
-                        <tooltip>Click to activate value widget.</tooltip>
-                    </column-data>
-                    <items>
-                        <include>destination</include>
-                        <include>nodes</include>
-                        <include>elapse</include>
-                        <include>executable</include>
-                    </items>
-                </export-for-override>
             </import>
         </launch-tab>
     </control-data> 
