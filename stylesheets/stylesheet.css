@@ -188,6 +188,7 @@ code, pre {
 }
 
 code {
+<<<<<<< HEAD
     background-image: -webkit-linear-gradient(top,rgba(255, 255, 255, 0.5), rgba(177, 177, 177, 0.26));
     background-image: -moz-linear-gradient(top,rgba(255, 255, 255, 0.5), rgba(177, 177, 177, 0.26));
     background-image: -ms-linear-gradient(top,rgba(255, 255, 255, 0.5), rgba(177, 177, 177, 0.26));
@@ -224,6 +225,13 @@ code.selected {
 }
 
 
+=======
+  padding: 0 3px;
+  background-color: #f2f2f2;
+  border: solid 1px #ddd;
+}
+
+>>>>>>> 41be50341592840046c8aa4be16c2bc468867761
 pre {
   padding: 20px;
   overflow: auto;
@@ -238,7 +246,10 @@ pre code {
   border: none;
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 41be50341592840046c8aa4be16c2bc468867761
 ul, ol, dl {
   margin-bottom: 20px;
 }
@@ -308,13 +319,18 @@ date {
     display:block;
     height: 30px;
     font-size: 18px;
+<<<<<<< HEAD
     width: 125px;
+=======
+    width: 200px;
+>>>>>>> 41be50341592840046c8aa4be16c2bc468867761
     float: left;
     color: #1d1d1d;
 }
 
 event {
     margin-bottom: 8px;
+<<<<<<< HEAD
     font-size: 18px;
     font-weight: normal;
     display:block;
@@ -328,6 +344,14 @@ event h4 {
     font-weight: normal;
     padding: 0;
     margin: 0;
+=======
+  font-size: 18px;
+  font-weight: bold;
+  color: #d5000d;
+    display:block;
+    height: 30px;
+    float: none;
+>>>>>>> 41be50341592840046c8aa4be16c2bc468867761
 }
 
 h4 {
@@ -354,6 +378,7 @@ h1, h2, h3 {
     margin-bottom: 15px;  
 }
 
+<<<<<<< HEAD
 h1 span.note {
     font-size: 9pt;
     position:relative;
@@ -370,6 +395,8 @@ h2 ul {
     line-height: 150%;
 }
 
+=======
+>>>>>>> 41be50341592840046c8aa4be16c2bc468867761
 h3, h4, h5 {
     margin-bottom: 12px;
 }
@@ -393,6 +420,15 @@ blockquote {
   border-left: 10px solid #e9e9e9;
 }
 
+<<<<<<< HEAD
+=======
+ul li {
+  list-style-position: inside;
+  list-style: disc;
+  margin-left: 20px;
+}
+
+>>>>>>> 41be50341592840046c8aa4be16c2bc468867761
 ol li {
   list-style-position: inside;
   list-style: decimal;
@@ -403,6 +439,7 @@ dl dt {
   color: #303030;
 }
 
+<<<<<<< HEAD
 
 div.blank {
     display: block;
@@ -426,6 +463,8 @@ div.hidden {
 }
 
 
+=======
+>>>>>>> 41be50341592840046c8aa4be16c2bc468867761
 footer {
   padding-top: 20px;
   padding-bottom: 30px;
